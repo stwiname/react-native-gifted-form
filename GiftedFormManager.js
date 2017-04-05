@@ -1,6 +1,6 @@
 var validatorjs = require('validator');
 
-function doValidateOne(k = '', value = undefined, validators = {}) {
+function doValidateOne(k = '', value = '', validators = {}) {
   var isValid = null;
   var validate = validators.validate || [];
   var result = [];
