@@ -20,7 +20,7 @@ module.exports = React.createClass({
       type: 'OptionWidget',
     });
   },
-  
+
   _renderCheckmark() {
     if (this.state.value === true) {
       return (
@@ -48,7 +48,7 @@ module.exports = React.createClass({
         this.props.onClose(this.props.title, this.props.navigator);
       }
     } else {
-      this._onChange(!this.state.value)
+      this._onChange(!this.state.value);
     }
   },
   
@@ -66,7 +66,7 @@ module.exports = React.createClass({
               {this.props.title}
             </Text>
             {this._renderCheckmark()}
-          </View>        
+          </View>
         </TouchableHighlight>
       </View>
     );
