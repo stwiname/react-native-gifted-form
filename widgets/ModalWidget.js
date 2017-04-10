@@ -83,7 +83,7 @@ module.exports = React.createClass({
 
             navigator={navigator}
             isModal={true}
-            children={_self._childrenWithProps}
+            children={_self._childrenWithProps()}
           />
         );
       },
@@ -156,7 +156,7 @@ module.exports = React.createClass({
   },
 
   componentWillMount() {
-    this._childrenWithProps = React.Children.map(this.props.children, (child) => {
+    this._childrenWithProps = () => React.Children.map(this.props.children, (child) => {
       return React.cloneElement(child, {
         formStyles: this.props.formStyles,
         openModal: this.props.openModal,
