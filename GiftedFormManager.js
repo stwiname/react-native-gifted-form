@@ -6,7 +6,7 @@ function doValidateOne(k = '', value = '', validators = {}) {
   var result = [];
 
   for (var i = 0; i < validate.length; i++) {
-    if (validate[i].validator === 'undefined') { continue; }
+    if (!validate[i].validator || validate[i].validator === 'undefined') { continue; }
 
     var args = validate[i].arguments;
     args = !Array.isArray(args) ? [ args ] : args;
@@ -49,6 +49,13 @@ function doValidateOne(k = '', value = '', validators = {}) {
         if (typeof clonedArgs[0] === 'string') {
           clonedArgs[0] = clonedArgs[0].trim();
         }
+      }
+
+      // Validator ONLY accepts string arguments.
+      if (clonedArgs[0] === null || clonedArgs[0] === undefined) {
+        clonedArgs[0] = '';
+      } else {
+        clonedArgs[0] = String(clonedArgs[0]);
       }
 
       isValid = validatorjs[validate[i].validator].apply(null, clonedArgs);
@@ -296,6 +303,27 @@ class Manager {
     if (typeof this.stores[obj.formName].values[obj.name] === 'undefined') {
       this.stores[obj.formName].values[obj.name] = obj.value;
     }
+  }
+
+  getValidationErrors(validated, notValidMessage = '{TITLE} Invalid', requiredMessage = '{TITLE} Required') {
+    var errors = [];
+    if (validated.isValid === false) {
+      for (var k in validated.results) {
+        if (validated.results.hasOwnProperty(k)) {
+          for (var j in validated.results[k]) {
+            if (validated.results[k].hasOwnProperty(j)) {
+              if (validated.results[k][j].isValid === false) {
+                let defaultMessage = !!validated.results[k][j].value ? notValidMessage : requiredMessage;
+                errors.push(validated.results[k][j].message || defaultMessage.replace('{TITLE}', validated.results[k][j].title));
+                // displaying only 1 error per widget
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    return errors;
   }
 }
 

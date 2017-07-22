@@ -15,7 +15,7 @@ var GiftedSwitch = React.createClass({
       <Switch
         {...this.props}
       />
-    )
+    );
   },
   render() {
     return (
