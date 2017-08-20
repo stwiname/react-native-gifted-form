@@ -24,6 +24,7 @@ const RowValueWidget = require('./widgets/RowValueWidget');
 const LoadingWidget = require('./widgets/LoadingWidget');
 const HiddenWidget = require('./widgets/HiddenWidget');
 const ErrorsWidget = require('./widgets/ErrorsWidget');
+const ListWidget = require('./widgets/ListWidget');
 
 const GiftedForm = React.createClass({
   mixins: [ ContainerMixin ],
@@ -48,6 +49,7 @@ const GiftedForm = React.createClass({
     HiddenWidget,
     ValidationErrorWidget,
     ErrorsWidget,
+    ListWidget,
   },
 
   getDefaultProps() {

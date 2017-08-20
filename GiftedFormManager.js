@@ -1,4 +1,5 @@
 var validatorjs = require('validator');
+var _ = require('lodash');
 
 function doValidateOne(k = '', value = '', validators = {}) {
   var isValid = null;
@@ -238,8 +239,9 @@ class Manager {
       if (typeof this.stores[formName].values === 'object') {
         var res = this.stores[formName].values;
         var formatted = formatValues(res);
-        if (typeof formatted[name] !== 'undefined') {
-          return formatted[name];
+        var value = _.get(formatted, name);
+        if (typeof value !== 'undefined') {
+          return value;
         }
       }
     }
@@ -267,7 +269,7 @@ class Manager {
   handleUpdateValue(obj) {
     this.initForm(obj.formName);
 
-    this.stores[obj.formName].values[obj.name] = obj.value;
+    _.set(this.stores[obj.formName].values, obj.name, obj.value);
   }
 
   handleReset(formName) {
@@ -286,12 +288,12 @@ class Manager {
   }
 
   handleClearSelect(obj) {
+    console.warn('handleClearSelect: Not updated for lists');
     this.initForm(obj.formName);
 
     for (var key in this.stores[obj.formName].values) {
       if (this.stores[obj.formName].values.hasOwnProperty(key)) {
         if (key.indexOf(obj.name) === 0) {
-          // console.log('CLEARING '+key);
           delete this.stores[obj.formName].values[key];
         }
       }
@@ -300,8 +302,8 @@ class Manager {
 
   handleUpdateValueIfNotSet(obj) {
     this.initForm(obj.formName);
-    if (typeof this.stores[obj.formName].values[obj.name] === 'undefined') {
-      this.stores[obj.formName].values[obj.name] = obj.value;
+    if (typeof _.get(this.stores[obj.formName].values, obj.name) === 'undefined') {
+      _.set(this.stores[obj.formName].values, obj.name, obj.value);
     }
   }
 
