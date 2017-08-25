@@ -7,6 +7,7 @@ var {
 } = require('react-native')
 
 var WidgetMixin = require('../mixins/WidgetMixin.js');
+var GiftedFormManager = require('../GiftedFormManager');
 
 
 module.exports = React.createClass({
@@ -18,10 +19,15 @@ module.exports = React.createClass({
       // @todo type avec suffix Widget pour all
       type: 'ListWidget',
       underlined: false,
+      displayValidationError: false,
       onTextInputFocus: (value) => value,
       onTextInputBlur: (value) => value,
       renderListItem: (value, index, removeItem) => {},
       renderAddItem: (onPress) => {},
+      renderRemoveItem: (removeItem) => null,
+      renderValidationMessage: (name, index, key) => null,
+      renderItemSeparatorWidget: () => {},
+      renderListSeparatorWidget: () => {},
       getDefaultItem: () => {}
     }
   },
@@ -55,16 +61,28 @@ module.exports = React.createClass({
   },
 
   _removeItem(index) {
-    const value = this.state.value.slice(0);
-    this._onChange(value.splice(index, 1));
+    const value = this.state.value.slice(0); // Clone
+    value.splice(index, 1) // Remove item
+    this._onChange(value);
   },
 
   render() {
     return (
       <View style={this.getStyle(['rowContainer'])}>
         {
-          this.state.value && this.state.value.map(this._childrenWithProps)
-          //TODO add ability to remove items
+          this.state.value && this.state.value.map((value, key) => {
+            return (
+              <View key={key}>
+                {this._childrenWithProps(value, key)}
+                {this.props.renderRemoveItem &&
+                  this.props.renderRemoveItem(() => this._removeItem(key))
+                }
+                { this.props.renderListSeparatorWidget &&
+                  this.props.renderListSeparatorWidget()
+                }
+              </View>
+            )
+          })
         }
         {this.props.renderAddItem(this._addItem.bind(this))}
       </View>
@@ -77,23 +95,34 @@ module.exports = React.createClass({
         return null;
       }
       const val = child.props && (child.props.value || child.props.name);
-      return React.cloneElement(child, {
-        ...child.props,
-        formStyles: this.props.formStyles,
-        openModal: this.props.openModal,
-        formName: this.props.formName,
-        navigator: this.props.navigator,
-        onFocus: this.props.onFocus,
-        onBlur: this.props.onBlur,
-        onValidation: this.props.onValidation,
-        onValueChange:this.props.onValueChange,
+      return (
+        <View>
+          {React.cloneElement(child, {
+            ...child.props,
+            formStyles: this.props.formStyles,
+            openModal: this.props.openModal,
+            formName: this.props.formName,
+            navigator: this.props.navigator,
+            onFocus: this.props.onFocus,
+            onBlur: this.props.onBlur,
+            onValidation: this.props.onValidation,
+            onValueChange:this.props.onValueChange,
 
-        name: `${this.props.name}[${index}].${val}`,
-        ref: `${this.props.name}[${index}].${val}`,
-        value: value[val],
+            name: `${this.props.name}[${index}].${val}`,
+            ref: `${this.props.name}[${index}].${val}`,
+            value: value[val],
 
-        onClose: this.onClose,
-      });
+            onClose: this.onClose,
+          })}
+          { this.props.renderValidationMessage &&
+            this.props.renderValidationMessage(this.props.name, index, val)
+          }
+          { this.props.renderItemSeparatorWidget &&
+            this.props.renderItemSeparatorWidget()
+          }
+
+          </View>
+        )
     });
   },
   
