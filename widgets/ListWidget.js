@@ -84,7 +84,7 @@ module.exports = React.createClass({
             )
           })
         }
-        {this.props.renderAddItem(this._addItem.bind(this))}
+        {this.props.renderAddItem(this._addItem)}
       </View>
     );
   },
