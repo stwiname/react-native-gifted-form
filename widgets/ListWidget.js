@@ -68,12 +68,14 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <View style={this.getStyle(['rowContainer'])}>
+      <View style={this.getStyle(['listContainer'])}>
         {
           this.state.value && this.state.value.map((value, key) => {
             return (
               <View key={key}>
-                {this._childrenWithProps(value, key)}
+                <View  style={this.getStyle(['rowContainer'])}>
+                  {this._childrenWithProps(value, key)}
+                </View>
                 {this.props.renderRemoveItem &&
                   this.props.renderRemoveItem(() => this._removeItem(key))
                 }
@@ -120,9 +122,8 @@ module.exports = React.createClass({
           { this.props.renderItemSeparatorWidget &&
             this.props.renderItemSeparatorWidget()
           }
-
-          </View>
-        )
+        </View>
+      )
     });
   },
   
@@ -147,10 +148,13 @@ module.exports = React.createClass({
     spacer: {
       width: 10,
     },
-    rowContainer: {
+    listContainer: {
       backgroundColor: '#FFF',
       borderBottomWidth: 1 / PixelRatio.get(),
       borderColor: '#c8c7cc',
+    },
+    rowContainer: {
+
     },
     row: {
       flexDirection: 'row',
