@@ -97,7 +97,7 @@ module.exports = React.createClass({
     switchTitle: {
       fontSize: 15,
       color: '#000',
-      flex: 0.7,
+      flex: 1,
       paddingLeft: 10,
     },
   },
