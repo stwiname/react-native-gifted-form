@@ -53,7 +53,7 @@ module.exports = React.createClass({
                 this._onChange(value);
                 this.props.onChange && this.props.onChange(value);
               }}
-              value={this.state.value}
+              value={!!this.state.value}
             />
           </View>
         </View>
