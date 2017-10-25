@@ -28,6 +28,7 @@ module.exports = React.createClass({
       renderValidationMessage: (name, index, key) => null,
       renderItemSeparatorWidget: () => {},
       renderListSeparatorWidget: () => {},
+      renderEmptyList: () => {},
       getDefaultItem: () => {}
     }
   },
@@ -47,7 +48,7 @@ module.exports = React.createClass({
         >
           {this.props.title}
         </Text>
-      );      
+      );
     }
     return (
       <View style={this.getStyle(['spacer'])}/>
@@ -85,6 +86,9 @@ module.exports = React.createClass({
               </View>
             )
           })
+        }
+        { (!this.state.value || this.state.value.length <= 0)
+          && this.props.renderEmptyList && this.props.renderEmptyList()
         }
         {this.props.renderAddItem(this._addItem)}
       </View>
