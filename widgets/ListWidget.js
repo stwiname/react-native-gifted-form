@@ -113,6 +113,7 @@ module.exports = React.createClass({
             onBlur: this.props.onBlur,
             onValidation: this.props.onValidation,
             onValueChange:this.props.onValueChange,
+            removeSelf: () => this._removeItem(index),
 
             name: `${this.props.name}[${index}].${val}`,
             ref: `${this.props.name}[${index}].${val}`,
