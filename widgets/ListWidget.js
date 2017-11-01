@@ -102,7 +102,7 @@ module.exports = React.createClass({
       }
       const val = child.props && (child.props.value || child.props.name);
       return (
-        <View>
+        <View key={index}>
           {React.cloneElement(child, {
             ...child.props,
             formStyles: this.props.formStyles,
