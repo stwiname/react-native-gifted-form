@@ -60,9 +60,9 @@ module.exports = React.createClass({
           underlayColor={this.getStyle('underlayColor').pop()}
           {...this.props} // mainly for underlayColor
         >
-          <View style={this.getStyle('row')}>
+          <View style={[this.getStyle('row')]}>
             {this._renderImage()}
-            <Text numberOfLines={1} style={this.getStyle('switchTitle')}>
+            <Text numberOfLines={1} style={[this.getStyle('switchTitle'), this.state.value && this.getStyle('activeText')]}>
               {this.props.title}
             </Text>
             {this._renderCheckmark()}

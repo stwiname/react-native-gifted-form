@@ -79,7 +79,7 @@ module.exports = React.createClass({
 
   render() {
     return (
-      <View>
+      <View style={this.getStyle('submitButtonWrapper')}>
         <Button
           ref='submitButton'
           style={this.getStyle('submitButton')}
