@@ -1,44 +1,44 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TextInput,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
-var GiftedFormManager = require('../GiftedFormManager');
+import WidgetMixin from '../mixins/WidgetMixin';
+import GiftedFormManager from '../GiftedFormManager';
 
+export default class ListWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    inline: true,
+    // @todo type avec suffix Widget pour all
+    type: 'ListWidget',
+    underlined: false,
+    displayValidationError: false,
+    onTextInputFocus: (value) => value,
+    onTextInputBlur: (value) => value,
+    renderListItem: (value, index, removeItem) => {},
+    renderAddItem: (onPress) => {},
+    renderRemoveItem: (removeItem) => null,
+    renderValidationMessage: (name, index, key) => null,
+    renderItemSeparatorWidget: () => {},
+    renderListSeparatorWidget: () => {},
+    renderEmptyList: () => {},
+    getDefaultItem: () => {}
+  }
 
-  getDefaultProps() {
-    return {
-      inline: true,
-      // @todo type avec suffix Widget pour all
-      type: 'ListWidget',
-      underlined: false,
-      displayValidationError: false,
-      onTextInputFocus: (value) => value,
-      onTextInputBlur: (value) => value,
-      renderListItem: (value, index, removeItem) => {},
-      renderAddItem: (onPress) => {},
-      renderRemoveItem: (removeItem) => null,
-      renderValidationMessage: (name, index, key) => null,
-      renderItemSeparatorWidget: () => {},
-      renderListSeparatorWidget: () => {},
-      renderEmptyList: () => {},
-      getDefaultItem: () => {}
-    }
-  },
-  
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ...WidgetMixin.defaultState,
       focused: false,
     }
-  },
-  
+  }
+
   _renderTitle() {
     if (this.props.title !== '') {
       return (
@@ -53,19 +53,19 @@ module.exports = React.createClass({
     return (
       <View style={this.getStyle(['spacer'])}/>
     );
-  },
+  }
 
   _addItem() {
     const value = (this.state.value || []).slice();
     value.push(Object.assign({}, this.props.getDefaultItem()));
     this._onChange(value);
-  },
+  }
 
   _removeItem(index) {
     const value = this.state.value.slice(0); // Clone
     value.splice(index, 1) // Remove item
     this._onChange(value);
-  },
+  }
 
   render() {
     return (
@@ -90,10 +90,10 @@ module.exports = React.createClass({
         { (!this.state.value || this.state.value.length <= 0)
           && this.props.renderEmptyList && this.props.renderEmptyList()
         }
-        {this.props.renderAddItem(this._addItem)}
+        {this.props.renderAddItem(this._addItem.bind(this))}
       </View>
     );
-  },
+  }
 
   _childrenWithProps(value, index) {
     return React.Children.map(this.props.children, (child) => {
@@ -130,9 +130,9 @@ module.exports = React.createClass({
         </View>
       )
     });
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -155,7 +155,7 @@ module.exports = React.createClass({
     },
     listContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     rowContainer: {
@@ -170,8 +170,6 @@ module.exports = React.createClass({
       paddingTop: 10,
       flexDirection: 'row',
       alignItems: 'center',
-      // selfAlign: 'center',
-      // backgroundColor: '#ff0000',
     },
     textInputInline: {
       fontSize: 15,
@@ -197,5 +195,5 @@ module.exports = React.createClass({
       height: 40,
       marginLeft: 40,
     },
-  },
-});
+  }
+}

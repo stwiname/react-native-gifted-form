@@ -3,26 +3,23 @@ import {
   View,
 } from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class SelectWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-
-  getDefaultProps() {
-    return {
-      type: 'SelectWidget',
-      multiple: false,
-      onSelect: () => {},
-      onClose: () => {},
-    };
-  },
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'SelectWidget',
+    multiple: false,
+    onSelect: () => {},
+    onClose: () => {},
+  }
 
   unSelectAll() {
     React.Children.forEach(this._childrenWithProps, (child, idx) => {
       this.refs[child.ref]._onChange(false);
     });
-  },
+  }
 
   render() {
     this._childrenWithProps = React.Children.map(this.props.children, (child, idx) => {
@@ -54,5 +51,5 @@ module.exports = React.createClass({
         {this._childrenWithProps}
       </View>
     );
-  },
-});
+  }
+}

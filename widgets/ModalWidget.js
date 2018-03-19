@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   View,
   Text,
@@ -6,46 +7,34 @@ import {
   Navigator,
   Image,
   TouchableOpacity,
-  PixelRatio,
+  StyleSheet,
 } from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin');
-
-var GiftedFormManager = require('../GiftedFormManager');
-var TimerMixin = require('react-timer-mixin');
-
+import WidgetMixin from '../mixins/WidgetMixin';
+import GiftedFormManager from '../GiftedFormManager';
 var moment = require('moment');
 
-module.exports = React.createClass({
-  mixins: [TimerMixin, WidgetMixin],
+export default class ModalWidget extends WidgetMixin {
 
-  getDefaultProps() {
-    return {
-      type: 'ModalWidget',
-      scrollEnabled: true,
-      disclosure: true,
-      cancelable: false,
-      displayValue: '',
-      onClose: () => {}
-    };
-  },
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'ModalWidget',
+    scrollEnabled: true,
+    disclosure: true,
+    cancelable: false,
+    displayValue: '',
+    onClose: () => {}
+  }
 
-  propTypes: {
-    type: React.PropTypes.string,
-    scrollEnabled: React.PropTypes.bool,
-    disclosure: React.PropTypes.bool,
-    cancelable: React.PropTypes.bool,
-    displayValue: React.PropTypes.string,
-    onClose: React.PropTypes.func
-  },
-
-  getInitialState() {
-    return {
-      // @todo
-      // should be an object with all status
-      // childrenAreValid: {},
-    };
-  },
+  static propTypes = {
+    ...WidgetMixin.propTypes,
+    type: PropTypes.string,
+    scrollEnabled: PropTypes.bool,
+    disclosure: PropTypes.bool,
+    cancelable: PropTypes.bool,
+    displayValue: PropTypes.string,
+    onClose: PropTypes.func
+  }
 
   renderDisclosure() {
     if (this.props.disclosure === true) {
@@ -58,7 +47,7 @@ module.exports = React.createClass({
       );
     }
     return null;
-  },
+  }
 
   onPress() {
 
@@ -72,7 +61,7 @@ module.exports = React.createClass({
 
 
     var route = {
-      onClose: _self.onClose,
+      onClose: _self.onClose.bind(_self),
       renderScene(navigator) {
         // not passing onFocus/onBlur of the current scene to the new scene
         var {onFocus, onBlur, ...others} = _self.props;
@@ -101,8 +90,8 @@ module.exports = React.createClass({
           return (
             <TouchableOpacity
               onPress={() => {
-                _self.requestAnimationFrame(() => {
-                  _self.onClose(null, navigator);
+                requestAnimationFrame(() => {
+                  _self.onClose.call(_self, null, navigator);
                 });
               }}
             >
@@ -126,8 +115,8 @@ module.exports = React.createClass({
         return (
           <TouchableOpacity
             onPress={() => {
-              _self.requestAnimationFrame(() => {
-                _self.onClose(null, navigator);
+              requestAnimationFrame(() => {
+                _self.onClose.call(_self, null, navigator);
               });
             }}
           >
@@ -153,7 +142,7 @@ module.exports = React.createClass({
     } else {
       this.props.openModal(route);
     }
-  },
+  }
 
   componentWillMount() {
     this._childrenWithProps = () => React.Children.map(this.props.children, (child) => {
@@ -162,21 +151,21 @@ module.exports = React.createClass({
         openModal: this.props.openModal,
         formName: this.props.formName,
         navigator: this.props.navigator,
-        onFocus: this.props.onFocus,
-        onBlur: this.props.onBlur,
-        onValidation: this.props.onValidation,
-        onValueChange: this.props.onValueChange,
+        onFocus: this.props.onFocus.bind(this),
+        onBlur: this.props.onBlur.bind(this),
+        onValidation: this.props.onValidation.bind(this),
+        onValueChange: this.props.onValueChange.bind(this),
 
-        onClose: this.onClose,
+        onClose: this.onClose.bind(this),
       });
     });
-  },
+  }
 
   componentDidMount() {
     this.setState({
       value: this._getDisplayableValue(),
     });
-  },
+  }
 
   onClose(value, navigator = null) {
     if (typeof value === 'string') {
@@ -194,13 +183,13 @@ module.exports = React.createClass({
     }
 
     this.props.onClose && this.props.onClose();
-  },
+  }
 
   refreshDisplayableValue() {
     this.setState({
       value: this._getDisplayableValue(),
     });
-  },
+  }
 
   _getDisplayableValue() {
     if (this.props.displayValue !== '') {
@@ -256,13 +245,13 @@ module.exports = React.createClass({
       }
     }
     return '';
-  },
+  }
 
   render() {
     return (
       <TouchableHighlight
         onPress={() => {
-          this.requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             this.onPress();
           });
         }}
@@ -282,9 +271,9 @@ module.exports = React.createClass({
         </View>
       </TouchableHighlight>
     );
-  },
+  }
 
-  defaultStyles: {
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -292,7 +281,7 @@ module.exports = React.createClass({
     },
     rowContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     underlayColor: '#c7c7cc',
@@ -321,5 +310,5 @@ module.exports = React.createClass({
       fontSize: 15,
       color: '#c7c7cc',
     },
-  },
-});
+  }
+}

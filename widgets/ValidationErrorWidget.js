@@ -1,22 +1,18 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text
-} = require('react-native')
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class ValidationErrorWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'ValidationErrorWidget',
+  }
 
-  
-  getDefaultProps() {
-    return {
-      type: 'ValidationErrorWidget',
-    };
-  },
-  
   render() {
     return (
       <View>
@@ -30,10 +26,9 @@ module.exports = React.createClass({
         </View>
       </View>
     );
-  },
-  
+  }
 
-  defaultStyles: {
+  static defaultStyles = {
     validationErrorRow: {
       paddingBottom: 10,
       paddingLeft: 10,
@@ -43,6 +38,5 @@ module.exports = React.createClass({
       fontSize: 12,
       color: '#ff001A',
     },
-  },
-  
-});
+  }
+}

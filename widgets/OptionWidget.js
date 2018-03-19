@@ -1,25 +1,20 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TouchableHighlight,
   Image,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class OptionWidget extends WidgetMixin {
 
-
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return ({
-      // onChange: null,
-      type: 'OptionWidget',
-    });
-  },
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'OptionWidget',
+  }
 
   _renderCheckmark() {
     if (this.state.value === true) {
@@ -32,7 +27,7 @@ module.exports = React.createClass({
       );
     }
     return null;
-  },
+  }
   
   _onClose() {
     if (this.props.multiple === false) {
@@ -50,13 +45,13 @@ module.exports = React.createClass({
     } else {
       this._onChange(!this.state.value);
     }
-  },
+  }
   
   render() {
     return (
       <View style={this.getStyle('rowContainer')}>
         <TouchableHighlight
-          onPress={this._onClose}
+          onPress={this._onClose.bind(this)}
           underlayColor={this.getStyle('underlayColor').pop()}
           {...this.props} // mainly for underlayColor
         >
@@ -70,9 +65,9 @@ module.exports = React.createClass({
         </TouchableHighlight>
       </View>
     );
-  },
-  
-  defaultStyles: {
+  }
+
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -85,7 +80,7 @@ module.exports = React.createClass({
     },
     rowContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     row: {
@@ -100,6 +95,5 @@ module.exports = React.createClass({
       flex: 1,
       paddingLeft: 10,
     },
-  },
-});
-
+  }
+}

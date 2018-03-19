@@ -1,22 +1,16 @@
-var React = require('react');
-
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import React from 'react';
+import WidgetMixin from '../mixins/WidgetMixin';
 
 var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
 
-
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-
-  getDefaultProps() {
-    return {
-      type: 'GooglePlacesWidget',
-    };
-  },
+export default class GooglePlacesWidget extends WidgetMixin {
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'GooglePlacesWidget',
+  }
 
   render() {
     const everywhere = {description: 'Everywhere', geometry: { location: { lat: 0, lng: 0 } }};
-
 
     return (
       <GooglePlacesAutocomplete
@@ -69,5 +63,5 @@ module.exports = React.createClass({
         {...this.props} // @todo test sans (need for 'name')
       />
     );
-  },
-});
+  }
+}

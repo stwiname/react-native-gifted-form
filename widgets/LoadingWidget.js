@@ -1,24 +1,22 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TouchableHighlight,
   Image,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 var GiftedSpinner = require('react-native-gifted-spinner');
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'LoadingWidget',
-      onPress: () => {},
-    };
-  },
+export default class LoadingWidget extends WidgetMixin {
+
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'LoadingWidget',
+    onPress: () => {},
+  }
 
   render() {
     return (
@@ -34,9 +32,9 @@ module.exports = React.createClass({
         </TouchableHighlight>
       </View>
     );
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -44,7 +42,7 @@ module.exports = React.createClass({
     },
     rowContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     row: {
@@ -53,5 +51,5 @@ module.exports = React.createClass({
       alignItems: 'center',
     },
     underlayColor: '#c7c7cc',
-  },
-});
+  }
+}

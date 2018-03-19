@@ -1,20 +1,17 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View
-} = require('react-native')
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class SeparatorWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'SeparatorWidget',
-    };
-  },
-  
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'SeparatorWidget',
+  }
+
   render() {
     return (
       <View
@@ -22,12 +19,11 @@ module.exports = React.createClass({
         {...this.props}
       />
     );
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     separator: {
       height: 10,
     },
-  },
-
-});
+  }
+}

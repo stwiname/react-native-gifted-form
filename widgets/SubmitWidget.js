@@ -1,49 +1,45 @@
-var React = require('react');
-
-
-var {View, Text} = require('react-native')
-var WidgetMixin = require('../mixins/WidgetMixin.js');
-
-
+import React from 'react';
+import PropTypes from 'prop-types';
+import {View, Text} from 'react-native';
+import WidgetMixin from '../mixins/WidgetMixin';
 import Button from 'apsl-react-native-button';
+import GiftedFormManager from '../GiftedFormManager';
 
-var GiftedFormManager = require('../GiftedFormManager');
+export default class SubmitWidget extends WidgetMixin {
 
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'SubmitWidget',
+    onSubmit: () => {},
+    preSubmit: () => {},
+    isDisabled: false,
+    activityIndicatorColor: 'black',
+    requiredMessage: '{TITLE} is required',
+    notValidMessage: '{TITLE} is not valid',
+  }
 
-// @todo to test with validations
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
+  static propTypes = {
+    ...WidgetMixin.propTypes,
+    onSubmit: PropTypes.func,
+    preSubmit: PropTypes.func,
+    isDisabled: PropTypes.bool,
+    activityIndicatorColor: PropTypes.string,
+    requiredMessage: PropTypes.string,
+    notValidMessage: PropTypes.string,
+  }
 
-  getDefaultProps() {
-    return {
-      type: 'SubmitWidget',
-      onSubmit: () => {},
-      preSubmit: () => {},
-      isDisabled: false,
-      activityIndicatorColor: 'black',
-      requiredMessage: '{TITLE} is required',
-      notValidMessage: '{TITLE} is not valid',
-    };
-  },
+  constructor(props) {
+    super(props);
 
-  propTypes: {
-    onSubmit: React.PropTypes.func,
-    preSubmit: React.PropTypes.func,
-    isDisabled: React.PropTypes.bool,
-    activityIndicatorColor: React.PropTypes.string,
-    requiredMessage: React.PropTypes.string,
-    notValidMessage: React.PropTypes.string,
-  },
-
-  getInitialState() {
-    return {
+    this.state = {
+      ...WidgetMixin.defaultState,
       isLoading: false,
-    };
-  },
+    }
+  }
 
   clearValidationErrors() {
     this.props.form.setState({errors: []});
-  },
+  }
 
   _postSubmit(errors = []) {
     errors = !Array.isArray(errors) ? [errors] : errors;
@@ -52,7 +48,7 @@ module.exports = React.createClass({
       isLoading: false,
     });
     this.props.form.setState({errors});
-  },
+  }
 
   _doSubmit() {
     this.props.preSubmit();
@@ -65,7 +61,7 @@ module.exports = React.createClass({
       this.setState({
         isLoading: true,
       });
-      this.props.onSubmit(true, values, validationResults, this._postSubmit, this.props.navigator);
+      this.props.onSubmit(true, values, validationResults, this._postSubmit.bind(this), this.props.navigator);
     } else {
       var errors = GiftedFormManager.getValidationErrors(
         validationResults,
@@ -73,9 +69,9 @@ module.exports = React.createClass({
         this.props.requiredMesage
       );
       this.props.form.setState({errors: errors});
-      this.props.onSubmit(false, values, validationResults, this._postSubmit, this.props.navigator);
+      this.props.onSubmit(false, values, validationResults, this._postSubmit.bind(this), this.props.navigator);
     }
-  },
+  }
 
   render() {
     return (
@@ -98,9 +94,9 @@ module.exports = React.createClass({
         </Button>
       </View>
     );
-  },
+  }
 
-  defaultStyles: {
+  static defaultStyles = {
     submitButton: {
       margin: 10,
       backgroundColor: '#3498db',
@@ -115,6 +111,5 @@ module.exports = React.createClass({
       color: 'white',
       fontSize: 15,
     },
-  },
-
-});
+  }
+}

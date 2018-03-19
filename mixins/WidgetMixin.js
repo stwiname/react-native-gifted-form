@@ -1,52 +1,51 @@
-var React = require('react');
-var {
-  Image
-} = require('react-native')
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Image } from 'react-native';
 
+// import ValidationErrorWidget from '../widgets/ValidationErrorWidget';
 
-var GiftedFormManager = require('../GiftedFormManager');
+import GiftedFormManager from '../GiftedFormManager';
 
-module.exports = {
-
-  getInitialState() {
-    return {
-      validationErrorMessage: null,
-    };
-  },
-
-  propTypes: {
-    name: React.PropTypes.string,
-    title: React.PropTypes.string,
-    formName: React.PropTypes.string,
-    // image: ,
-    widgetStyles: React.PropTypes.object,
-    formStyles: React.PropTypes.object,
-    validationImage: React.PropTypes.bool,
-    openModal: React.PropTypes.func,
-    // navigator: ,
-    onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    validateOnEmpty: React.PropTypes.bool,
+export default class WidgetMixin extends React.Component {
+  static propTypes = {
+    name:            PropTypes.string,
+    title:           PropTypes.string,
+    formName:        PropTypes.string,
+    widgetStyles:    PropTypes.object,
+    formStyles:      PropTypes.object,
+    validationImage: PropTypes.bool,
+    openModal:       PropTypes.func,
+    onFocus:         PropTypes.func,
+    onBlur:          PropTypes.func,
+    validateOnEmpty: PropTypes.bool,
     // If we want to store the state elsewhere (Redux store, for instance), we can use value and Form's onValueChange prop
-    value: React.PropTypes.any,
-  },
+    value: PropTypes.any,
+  }
 
-  getDefaultProps() {
-    return {
-      name: '',
-      title: '',
-      formName: '',
-      image: null,
-      widgetStyles: {},
-      formStyles: {},
-      validationImage: true,
-      openModal: null,
-      navigator: null,
-      onFocus: () => {},
-      onBlur: () => {},
-      validateOnEmpty: false,
-    };
-  },
+  static defaultProps = {
+    name: '',
+    title: '',
+    formName: '',
+    image: null,
+    widgetStyles: {},
+    formStyles: {},
+    validationImage: true,
+    openModal: null,
+    navigator: null,
+    onFocus: () => {},
+    onBlur: () => {},
+    validateOnEmpty: false,
+  }
+
+  static defaultState = {
+    validationErrorMessage: null
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = WidgetMixin.defaultState;
+  }
 
   componentDidMount() {
     // get value from prop
@@ -64,13 +63,13 @@ module.exports = {
         this._validate(formState.values[this.props.name]);
       }
     }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (typeof nextProps.value !== 'undefined' && nextProps.value !== this.props.value) {
       this._onChange(nextProps.value);
     }
-  },
+  }
 
   // get the styles by priority
   // defaultStyles < formStyles < widgetStyles
@@ -79,15 +78,15 @@ module.exports = {
       styleNames = [styleNames];
     }
 
-    if (typeof this.defaultStyles === 'undefined') {
-      this.defaultStyles = {};
+    if (typeof this.constructor.defaultStyles === 'undefined') {
+      this.constructor.defaultStyles = {};
     }
 
     var styles = [];
 
     for (let i = 0; i < styleNames.length; i++) {
-      if (typeof this.defaultStyles[styleNames[i]] !== 'undefined') {
-        styles.push(this.defaultStyles[styleNames[i]]);
+      if (typeof this.constructor.defaultStyles[styleNames[i]] !== 'undefined') {
+        styles.push(this.constructor.defaultStyles[styleNames[i]]);
       }
     }
 
@@ -106,11 +105,11 @@ module.exports = {
     }
 
     return styles;
-  },
+  }
 
   focus() {
     this.refs.input && this.refs.input.focus()
-  },
+  }
 
   _validate(value) {
     if (typeof value === 'undefined') {
@@ -135,14 +134,14 @@ module.exports = {
         // @todo set isvalid of modal children here
       }
     }
-  },
+  }
 
   _setValue(value) {
     this.setState({
       value: value
     });
     GiftedFormManager.updateValue(this.props.formName, this.props.name, value);
-  },
+  }
 
   _onChange(value, onChangeText = true) {
     if (onChangeText === true) {
@@ -155,7 +154,7 @@ module.exports = {
 
     this.props.onValueChange && this.props.onValueChange();
     // @todo modal widgets validation - the modalwidget row should inform about validation status
-  },
+  }
 
   // @todo options enable live checking
   _renderValidationError() {
@@ -175,14 +174,15 @@ module.exports = {
       return null;
     }
 
-    var ValidationErrorWidget = require('../widgets/ValidationErrorWidget');
+    const ValidationErrorWidget = require('../widgets/ValidationErrorWidget').default;
+
     return (
       <ValidationErrorWidget
         {...this.props}
         message={this.state.validationErrorMessage}
       />
     );
-  },
+  }
 
   _renderImage() {
     var validators = null;
@@ -239,5 +239,5 @@ module.exports = {
     }
 
     return null;
-  },
-};
+  }
+}

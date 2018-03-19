@@ -1,22 +1,19 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   TextInput,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class TextAreaWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'TextAreaWidget',
-    };
-  },
-  
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'TextAreaWidget',
+  }
+
   render() {
     return (
       <View style={this.getStyle('textAreaRow')}>
@@ -27,18 +24,18 @@ module.exports = React.createClass({
           {...this.props}
           
           onFocus={() => this.props.onFocus(true)}
-          onChangeText={this._onChange}
+          onChangeText={this._onChange.bind(this)}
           value={this.state.value}
         />
       </View>
     );
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     textAreaRow: {
       backgroundColor: '#FFF',
       height: 120,
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
       alignItems: 'center',
       paddingLeft: 10,
@@ -48,6 +45,5 @@ module.exports = React.createClass({
       fontSize: 15,
       flex: 1,
     },
-  },
-  
-});
+  }
+}

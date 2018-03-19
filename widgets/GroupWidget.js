@@ -4,17 +4,25 @@ import {
   Text
 } from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin');
+import WidgetMixin from '../mixins/WidgetMixin';
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
+export default class GroupWidget extends WidgetMixin {
 
-  getDefaultProps() {
-    return {
-      type: 'GroupWidget',
-      // @todo proptypes
-    };
-  },
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'GroupWidget',
+  }
+
+  static defaultStyles = {
+    headerTitle: {
+      fontSize: 12,
+      color: '#9b9b9b',
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginBottom: 5,
+      marginTop: 10,
+    },
+  }
 
   render() {
     var childrenWithProps = React.Children.map(this.props.children, (child) => {
@@ -47,16 +55,5 @@ module.exports = React.createClass({
     } else {
       return <View {...this.props}>{childrenWithProps}</View>
     }
-  },
-
-  defaultStyles: {
-    headerTitle: {
-      fontSize: 12,
-      color: '#9b9b9b',
-      paddingLeft: 10,
-      paddingRight: 10,
-      marginBottom: 5,
-      marginTop: 10,
-    },
-  },
-});
+  }
+}

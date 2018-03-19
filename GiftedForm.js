@@ -1,81 +1,78 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const GiftedFormManager = require('./GiftedFormManager');
+import GiftedFormManager from './GiftedFormManager';
 
-const ContainerMixin = require('./mixins/ContainerMixin');
-const WidgetMixin = require('./mixins/WidgetMixin');
+import ContainerMixin from './mixins/ContainerMixin';
+import WidgetMixin from './mixins/WidgetMixin';
 
-const TextInputWidget = require('./widgets/TextInputWidget');
-const TextAreaWidget = require('./widgets/TextAreaWidget');
-const SwitchWidget = require('./widgets/SwitchWidget');
-const SelectWidget = require('./widgets/SelectWidget');
-const OptionWidget = require('./widgets/OptionWidget');
-const SelectCountryWidget = require('./widgets/SelectCountryWidget');
-const DatePickerIOSWidget = require('./widgets/DatePickerIOSWidget');
-const ModalWidget = require('./widgets/ModalWidget');
-const SubmitWidget = require('./widgets/SubmitWidget');
-const SeparatorWidget = require('./widgets/SeparatorWidget');
-const GroupWidget = require('./widgets/GroupWidget');
-const NoticeWidget = require('./widgets/NoticeWidget');
-const ValidationErrorWidget = require('./widgets/ValidationErrorWidget');
-const GooglePlacesWidget = require('./widgets/GooglePlacesWidget');
-const RowWidget = require('./widgets/RowWidget');
-const RowValueWidget = require('./widgets/RowValueWidget');
-const LoadingWidget = require('./widgets/LoadingWidget');
-const HiddenWidget = require('./widgets/HiddenWidget');
-const ErrorsWidget = require('./widgets/ErrorsWidget');
-const ListWidget = require('./widgets/ListWidget');
+import TextInputWidget       from './widgets/TextInputWidget';
+import TextAreaWidget        from './widgets/TextAreaWidget';
+import SwitchWidget          from './widgets/SwitchWidget';
+import SelectWidget          from './widgets/SelectWidget';
+import OptionWidget          from './widgets/OptionWidget';
+import SelectCountryWidget   from './widgets/SelectCountryWidget';
+import DatePickerIOSWidget   from './widgets/DatePickerIOSWidget';
+import ModalWidget           from './widgets/ModalWidget';
+import SubmitWidget          from './widgets/SubmitWidget';
+import SeparatorWidget       from './widgets/SeparatorWidget';
+import GroupWidget           from './widgets/GroupWidget';
+import NoticeWidget          from './widgets/NoticeWidget';
+import ValidationErrorWidget from './widgets/ValidationErrorWidget';
+import GooglePlacesWidget    from './widgets/GooglePlacesWidget';
+import RowWidget             from './widgets/RowWidget';
+import RowValueWidget        from './widgets/RowValueWidget';
+import LoadingWidget         from './widgets/LoadingWidget';
+import HiddenWidget          from './widgets/HiddenWidget';
+import ErrorsWidget          from './widgets/ErrorsWidget';
+import ListWidget            from './widgets/ListWidget';
 
-const GiftedForm = React.createClass({
-  mixins: [ ContainerMixin ],
+export class GiftedForm extends ContainerMixin {
 
-  statics: {
-    TextInputWidget,
-    TextAreaWidget,
-    SwitchWidget,
-    SelectWidget,
-    OptionWidget,
-    SelectCountryWidget,
-    DatePickerIOSWidget,
-    ModalWidget,
-    SubmitWidget,
-    SeparatorWidget,
-    GroupWidget,
-    NoticeWidget,
-    GooglePlacesWidget,
-    RowWidget,
-    RowValueWidget,
-    LoadingWidget,
-    HiddenWidget,
-    ValidationErrorWidget,
-    ErrorsWidget,
-    ListWidget,
-  },
+  static TextInputWidget       = TextInputWidget;
+  static TextAreaWidget        = TextAreaWidget;
+  static SwitchWidget          = SwitchWidget;
+  static SelectWidget          = SelectWidget;
+  static OptionWidget          = OptionWidget;
+  static SelectCountryWidget   = SelectCountryWidget;
+  static DatePickerIOSWidget   = DatePickerIOSWidget;
+  static ModalWidget           = ModalWidget;
+  static SubmitWidget          = SubmitWidget;
+  static SeparatorWidget       = SeparatorWidget;
+  static GroupWidget           = GroupWidget;
+  static NoticeWidget          = NoticeWidget;
+  static GooglePlacesWidget    = GooglePlacesWidget;
+  static RowWidget             = RowWidget;
+  static RowValueWidget        = RowValueWidget;
+  static LoadingWidget         = LoadingWidget;
+  static HiddenWidget          = HiddenWidget;
+  static ValidationErrorWidget = ValidationErrorWidget;
+  static ErrorsWidget          = ErrorsWidget;
+  static ListWidget            = ListWidget;
 
-  getDefaultProps() {
-    return {
-      isModal: false,
-      clearOnClose: false,
+  static defaultProps = {
+    ...ContainerMixin.defaultProps,
+    isModal: false,
+    clearOnClose: false,
+    validators: {},
+    defaults: {},
+    openModal: null,
+  }
 
-      validators: {},
-      defaults: {},
-      openModal: null,
-    };
-  },
-
-  propTypes: {
-    isModal: React.PropTypes.bool,
-    clearOnClose: React.PropTypes.bool,
-    validators: React.PropTypes.object,
-    defaults: React.PropTypes.object,
-    openModal: React.PropTypes.func,
-  },
+  static propTypes = {
+    ...ContainerMixin.propTypes,
+    isModal:      PropTypes.bool,
+    clearOnClose: PropTypes.bool,
+    validators:   PropTypes.object,
+    defaults:     PropTypes.object,
+    openModal:    PropTypes.func,
+  }
 
   componentWillUnmount() {
     if (this.props.clearOnClose === true) {
       GiftedFormManager.reset(this.props.formName);
     }
-  },
+  }
 
   componentWillMount() {
     // register validators
@@ -91,30 +88,29 @@ const GiftedForm = React.createClass({
         GiftedFormManager.updateValueIfNotSet(this.props.formName, key, this.props.defaults[key]);
       }
     }
-  },
+  }
 
   render() {
     return this._renderContainerView();
-  },
-});
+  }
+}
 
-var GiftedFormModal = React.createClass({
-  mixins: [ ContainerMixin ],
+class GiftedFormModal extends ContainerMixin {
 
-  getDefaultProps() {
-    return {
-      isModal: true,
-    };
-  },
+  static defaultProps = {
+    ...ContainerMixin.defaultProps,
+    isModal: true,
+  }
 
-  propTypes: {
-    isModal: React.PropTypes.bool,
-  },
+  static propTypes = {
+    ...ContainerMixin.propTypes,
+    isModal: PropTypes.bool,
+  }
 
   render() {
     return this._renderContainerView();
-  },
-});
+  }
+}
 
 module.exports = {
   GiftedForm, GiftedFormModal, GiftedFormManager,

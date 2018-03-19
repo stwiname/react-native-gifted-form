@@ -1,41 +1,38 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text,
   Switch,
   Platform,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
-var GiftedSwitch = React.createClass({
+class GiftedSwitch extends React.Component {
   _getSwitch() {
     return (
       <Switch
         {...this.props}
       />
     );
-  },
+  }
+
   render() {
     return (
       <View>
         {this._getSwitch()}
       </View>
     );
-  },
-});
+  }
+}
 
+export default class SwitchWidget extends WidgetMixin {
 
-
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-
-  getDefaultProps() {
-    return {
-      type: 'SwitchWidget',
-    };
-  },
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'SwitchWidget',
+  }
 
   render() {
     return (
@@ -60,9 +57,9 @@ module.exports = React.createClass({
         {this._renderValidationError()}
       </View>
     );
-  },
+  }
 
-  defaultStyles: {
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -70,7 +67,7 @@ module.exports = React.createClass({
     },
     rowContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     row: {
@@ -91,5 +88,5 @@ module.exports = React.createClass({
     },
     switch: {
     },
-  },
-});
+  }
+}

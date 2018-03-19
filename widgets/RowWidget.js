@@ -1,27 +1,23 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TouchableHighlight,
   Image,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
-var TimerMixin = require('react-timer-mixin');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class RowWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [TimerMixin, WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'RowWidget',
-      onPress: () => {},
-      disclosure: true,
-    };
-  },
-  
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'RowWidget',
+    onPress: () => {},
+    disclosure: true,
+  }
+
   _renderDisclosure() {
     if (this.props.disclosure === true) {
       return (
@@ -33,14 +29,14 @@ module.exports = React.createClass({
       );
     }
     return null;
-  },
+  }
   
   render() {
     return (
       <View style={this.getStyle('rowContainer')}>
         <TouchableHighlight
           onPress={() => {
-            this.requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
               this.props.onPress();
             });
           }}
@@ -55,9 +51,9 @@ module.exports = React.createClass({
         </TouchableHighlight>
       </View>
     );
-  },
-  
-  defaultStyles: {
+  }
+
+  static defaultStyles = {
     rowImage: {
       height: 20,
       width: 20,
@@ -65,7 +61,7 @@ module.exports = React.createClass({
     },
     rowContainer: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     row: {
@@ -86,5 +82,5 @@ module.exports = React.createClass({
       color: '#000',
       paddingLeft: 10,
     },
-  },
-});
+  }
+}

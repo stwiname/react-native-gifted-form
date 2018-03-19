@@ -1,22 +1,15 @@
-var React = require('react');
-var {
-  View,
-  Text
-} = require('react-native')
+import React from 'react';
+import { View, Text } from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class NoticeWidget extends WidgetMixin {
 
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'NoticeWidget',
+  }
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'NoticeWidget',
-    };
-  },
-  
   render() {
     return (
       <View>
@@ -30,9 +23,9 @@ module.exports = React.createClass({
         </View>
       </View>
     );
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     noticeRow: {
       paddingBottom: 10,
       paddingTop: 5,
@@ -42,7 +35,6 @@ module.exports = React.createClass({
     noticeTitle: {
       fontSize: 13,
       color: '#9b9b9b',
-    },  
-  },
-});
-
+    },
+  }
+}

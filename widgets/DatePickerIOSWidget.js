@@ -1,32 +1,31 @@
-var React = require('react');
-var {
+import React from 'react';
+import {
   View,
   DatePickerIOS,
-  PixelRatio
-} = require('react-native')
+  StyleSheet
+} from 'react-native';
 
-var WidgetMixin = require('../mixins/WidgetMixin.js');
+import WidgetMixin from '../mixins/WidgetMixin';
 
+export default class DatePickerIOSWidget extends WidgetMixin {
+  static defaultProps = {
+    ...WidgetMixin.defaultProps,
+    type: 'DatePickerIOSWidget',
+    getDefaultDate: () => { return new Date(); }
+  }
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
-  
-  getDefaultProps() {
-    return {
-      type: 'DatePickerIOSWidget',
-      getDefaultDate: () => { return new Date(); }
-    };
-  },
-  
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      ...WidgetMixin.defaultState,
       value: new Date(),
-    };
-  },
-  
+    }
+  }
+
   componentDidMount() {
     this._onChange(this.props.getDefaultDate());
-  },
+  }
   
   render() {
     return (
@@ -36,21 +35,20 @@ module.exports = React.createClass({
 
           {...this.props}
           
-          onDateChange={this._onChange}
+          onDateChange={this._onChange.bind(this)}
           date={this.state.value}
         />
       </View>
     );
-  },
+  }
   
-  defaultStyles: {
+  static defaultStyles = {
     row: {
       backgroundColor: '#FFF',
-      borderBottomWidth: 1 / PixelRatio.get(),
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: '#c8c7cc',
     },
     picker: {
     },
-  },
-  
-});
+  }
+}

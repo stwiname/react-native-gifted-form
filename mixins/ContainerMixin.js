@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   ScrollView,
   View,
@@ -6,42 +7,39 @@ import {
   Dimensions
 } from 'react-native';
 
-var GiftedFormManager = require('../GiftedFormManager');
+import GiftedFormManager from '../GiftedFormManager';
 
-module.exports = {
+export default class ContainerMixin extends React.Component {
+  static propTypes = {
+    formName:      PropTypes.string,
+    scrollOnTap:   PropTypes.bool,
+    scrollEnabled: PropTypes.bool,
+    formStyles:    PropTypes.object
+  };
 
-  propTypes: {
-    formName: React.PropTypes.string,
-    scrollOnTap: React.PropTypes.bool,
-    scrollEnabled: React.PropTypes.bool,
-    formStyles: React.PropTypes.object,
-    // navigator: ,
-  },
+  static defaultProps = {
+    formName:      'form',
+    scrollOnTap:   true, // auto scroll when focus textinput in bottom of screen
+    scrollEnabled: true,
+    formStyles:    {},
+    navigator:     null, // @todo test when null if crash
+  }
 
-  getDefaultProps() {
-    return {
-      formName: 'form',
-      scrollOnTap: true, // auto scroll when focus textinput in bottom of screen
-      scrollEnabled: true,
-      formStyles: {},
-      navigator: null, // @todo test when null if crash
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: []
     }
-  },
-
-  getInitialState() {
-    return {
-      errors: [],
-    };
-  },
+  }
 
   _onTouchStart(e) {
     this._pageY = e.nativeEvent.pageY;
     this._locationY = e.nativeEvent.locationY;
-  },
+  }
 
   _onScroll(e) {
     this._y = e.nativeEvent.contentOffset.y;
-  },
+  }
 
   // https://facebook.github.io/react-native/docs/nativemethodsmixin.html#content
   // I guess it can be improved by using height measures
@@ -69,7 +67,7 @@ module.exports = {
         contentInset: {top: 0, bottom: keyboardHeight, left: 0, right: 0},
       });
     }
-  },
+  }
 
   handleBlur() {
     if (Platform.OS !== 'android' && this.props.scrollEnabled === true) {
@@ -78,19 +76,19 @@ module.exports = {
         contentInset: {top: 0, bottom: 0, left: 0, right: 0},
       });
     }
-  },
+  }
 
   handleValidation() {
     if (!this.props.onValidation) return;
     var validation = GiftedFormManager.validate(this.props.formName);
     this.props.onValidation(validation);
-  },
+  }
 
   handleValueChange() {
     if (!this.props.onValueChange) return;
     var values = GiftedFormManager.getValues(this.props.formName);
     this.props.onValueChange(values);
-  },
+  }
 
   childrenWithProps() {
     return React.Children.map(this.props.children, (child) => {
@@ -101,14 +99,14 @@ module.exports = {
           formName: this.props.formName,
           form: this,
           navigator: this.props.navigator,
-          onFocus: this.handleFocus,
-          onBlur: this.handleBlur,
-          onValidation: this.handleValidation,
-          onValueChange: this.handleValueChange,
+          onFocus: this.handleFocus.bind(this),
+          onBlur: this.handleBlur.bind(this),
+          onValidation: this.handleValidation.bind(this),
+          onValueChange: this.handleValueChange.bind(this),
         });
       }
     });
-  },
+  }
 
   componentDidMount() {
     this._y = 0;
@@ -118,7 +116,7 @@ module.exports = {
     if (this.props.scrollEnabled === true) {
       this._scrollResponder = this.refs.container.getScrollResponder();
     }
-  },
+  }
 
   _renderContainerView() {
     var formStyles = this.props.formStyles;
@@ -153,8 +151,8 @@ module.exports = {
         {this.childrenWithProps()}
       </View>
     );
-  },
-};
+  }
+}
 
 var styles = {
   containerView: {

@@ -4,11 +4,18 @@ import {
   Text,
 } from 'react-native';
 
+import WidgetMixin from '../mixins/WidgetMixin';
 
-const WidgetMixin = require('../mixins/WidgetMixin.js');
+export default class ErrorsWidget extends WidgetMixin {
 
-module.exports = React.createClass({
-  mixins: [WidgetMixin],
+  static defaultStyles = {
+    errorContainer: {
+      padding: 10,
+    },
+    errorText: {
+      color: '#ff0000',
+    },
+  }
 
   render() {
     var errors = this.props.form.state.errors;
@@ -26,15 +33,5 @@ module.exports = React.createClass({
       );
     }
     return null;
-  },
-
-  defaultStyles: {
-    errorContainer: {
-      padding: 10,
-    },
-    errorText: {
-      color: '#ff0000',
-    },
-  },
-
-});
+  }
+}
